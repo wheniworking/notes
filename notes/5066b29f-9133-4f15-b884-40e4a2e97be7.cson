@@ -1,0 +1,90 @@
+createdAt: "2019-08-27T03:13:06.173Z"
+updatedAt: "2019-08-27T03:23:40.144Z"
+type: "MARKDOWN_NOTE"
+folder: "b54907bec9ebd1910d19"
+title: "$jacocoData attribute filtering"
+tags: []
+content: '''
+  ## $jacocoData attribute filtering
+  
+  ```java
+  private static Map<String, Object> toMap(AuthenticatorAvailability authenticatorAvailability) {
+          Map<String, Object> map = new HashMap<>();
+  
+          for (Field field : fields) {
+              field.setAccessible(true);
+              JsonProperty jsonProperty = field.getAnnotation(JsonProperty.class);
+              String prop = "";
+              if (jsonProperty != null) {
+                  prop = jsonProperty.value();
+              }
+              if (StringUtils.isBlank(prop)) {
+                  prop = field.getName();
+              }
+              if (!"amr_details".equals(prop)) {
+                  try {
+                      map.put(prop, field.get(authenticatorAvailability));
+                  } catch (IllegalAccessException e) {
+                  }
+              }
+  
+          }
+          return map;
+      }
+  ```
+  
+  This code snippet will convert an AuthenticatorAvailability object to a HashMap.
+  
+  While runing its unit test case in IDEA , it works as expected. However, while using `mvn test`, it throws `NullPointerException`.
+  
+  It said that `$jacocoData` is null in line `9`
+  
+  ```
+    JsonProperty jsonProperty = field.getAnnotation(JsonProperty.class);
+  ```
+  
+  But class AuthenticatorAvailability have no attribute named `$jacocoData`. Where did it come from?
+  
+  And after check the `pom.xml`, I found some clues
+  
+  ```xml
+  <profiles>
+          <!-- ignore the class not need to calculate coverage -->
+          <profile>
+              <id>sonar</id>
+              <properties>
+                  <sonar.jacoco.reportPaths>target/jacoco.exec</sonar.jacoco.reportPaths>
+                  <sonar.exclusions>**/exception/*</sonar.exclusions>
+              </properties>
+          </profile>
+      </profiles>
+  ```
+  
+  It indicates that maven will use jacoco to calculate the test case code covarage, and it will add a attribute to the class `AuthenticatorAvailability`.
+  
+  How to filter this `$jacocoData` ? use code below:
+  
+  ```java
+      private static boolean isSynthetic(int mod) {
+          return (mod & 0x00001000) != 0;
+      }
+  
+  ```
+  
+  and add conditional statement before `field.setAccessible(true);`.
+  
+  ```java
+  if (isSynthetic(field.getModifiers())) {
+          logger.debug("filed [{}] is synthetic filed, skip", field.getName());
+          continue;
+  }
+  ```
+  
+  Now everything is fine!
+  
+  
+  
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

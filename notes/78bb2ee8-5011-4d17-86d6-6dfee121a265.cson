@@ -1,0 +1,16 @@
+createdAt: "2019-09-05T02:10:00.506Z"
+updatedAt: "2019-09-05T02:10:14.371Z"
+type: "MARKDOWN_NOTE"
+folder: "b54907bec9ebd1910d19"
+title: "DMA和Channel"
+tags: []
+content: '''
+  ## DMA和Channel
+  
+   一个设备接口试图通过总线直接向外部设备(磁盘)传送数据时，它会先向CPU发送DMA请求信号。外部设备(磁盘)通过DMA的一种专门接口电路――DMA控制器（DMAC），向CPU提出接管总线控制权的总线请求，CPU收到该信号后，在当前的总线周期结束后，会按DMA信号的优先级和提出DMA请求的先后顺序响应DMA信号。CPU对某个设备接口响应DMA请求时，会让出总线控制权。于是在DMA控制器的管理下，磁盘和存储器直接进行数据交换，而不需CPU干预。数据传送完毕后，设备接口会向CPU发送DMA结束信号，交还总线控制权。
+  
+  而通道则是在DMA的基础上增加了能执行有限通道指令的I/O控制器，代替CPU管理控制外设。通道有自己的指令系统，是一个协处理器，他实质是一台能够执行有限的输入输出指令，并且有专门通讯传输的通道总线完成控制。
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false

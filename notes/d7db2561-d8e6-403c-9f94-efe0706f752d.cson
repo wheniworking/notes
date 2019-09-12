@@ -1,0 +1,36 @@
+createdAt: "2019-09-05T06:57:17.902Z"
+updatedAt: "2019-09-05T06:57:34.222Z"
+type: "MARKDOWN_NOTE"
+folder: "b54907bec9ebd1910d19"
+title: "tmux config"
+tags: []
+content: '''
+  ## tmux config
+  
+  ```shell
+  set -g default-terminal "xterm-256color"
+  set -g display-time 3000
+  set -g escape-time 0
+  set -g history-limit 65535
+  set -g base-index 1
+  set -g pane-base-index 1
+  
+  #-- bindkeys --#
+  # prefix key (Ctrl+a)
+  set -g prefix ^a
+  unbind ^b
+  bind a send-prefix
+  
+  set -g mouse on
+  
+  # select pane
+  bind k selectp -U # above (prefix k)
+  bind j selectp -D # below (prefix j)
+  bind h selectp -L # left (prefix h)
+  bind l selectp -R # right (prefix l)
+  
+  ```
+'''
+linesHighlighted: []
+isStarred: false
+isTrashed: false
